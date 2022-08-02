@@ -79,10 +79,7 @@ module fadder(input  [31:0] regb, regc, output [31:0] rega);
 			regae = regae + 1;
 			regam = regam >> 1;
 		end else if((regam[23] != 1) && (regae != 0)) begin
-			if (regam[23:2] == 22'b0000000000000000000001) begin
-				regae = regae - 21;
-				regam = regam << 21;
-			end else if (regam[23:3] == 21'b000000000000000000001) begin
+			if (regam[23:3] == 21'b000000000000000000001) begin
 				regae = regae - 20;
 				regam = regam << 20;
 			end else if (regam[23:4] == 20'b00000000000000000001) begin

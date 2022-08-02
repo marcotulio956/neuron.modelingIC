@@ -1,1 +1,8 @@
 dumps/
+work/
+*.wlf
+*.ini
+*.qpg 
+*.qlt 
+*.qtl 
+*.qdb

@@ -49,7 +49,7 @@ module falu(input [1:0] opf, input [31:0] regb, regc, output [31:0] rega);
 
 	always @(*) begin
 		case(opf)
-			ADD: begin
+			ADD, SUB: begin
 				if ((regbe == 255 && regbm != 0) || (regce == 0) && (regcm == 0)) begin // unk b or c=0 -> b
 					regas = regbs;
 					regae = regbe;
@@ -64,33 +64,17 @@ module falu(input [1:0] opf, input [31:0] regb, regc, output [31:0] rega);
 					regam = 0;
 				end else begin // valid b valid c
 					fadder_regb = regb;
-					fadder_regc = regc;
+
+					if(opf==ADD)
+						fadder_regc = regc;
+					else if(opf==SUB)
+						fadder_regc = {~regc[31], regc[30:0]}; // sub is just neg add
+
 					regas = fadder_rega[31];
 					regae = fadder_rega[30:23];
 					regam = fadder_rega[22:0];
 				end
 			end 
-			SUB: begin
-				if ((regbe == 255 && regbm != 0) || (regce == 0) && (regcm == 0)) begin // unk b or c=0 -> b
-					regas = regbs;
-					regae = regbe;
-					regam = regbm;
-				end else if ((regce == 255 && regcm != 0) || (regbe == 0) && (regbm == 0)) begin // unk c or b=0 -> c
-					regas = regcs;
-					regae = regce;
-					regam = regcm;
-				end else if ((regbe == 255) || (regce == 255)) begin // b inf or c inf -> inf
-					regas = regbs ^ regcs;
-					regae = 255;
-					regam = 0;
-				end else begin // valid b valid c
-					fadder_regb = regb;
-					fadder_regc = {~regc[31], regc[30:0]}; // sub is just neg add
-					regas = fadder_rega[31];
-					regae = fadder_rega[30:23];
-					regam = fadder_rega[22:0];
-				end
-			end
 			MUL: begin
 				if (regbe == 255 && regbm != 0) begin // unk b -> unk
 					regas = regbs;
@@ -124,7 +108,7 @@ module falu(input [1:0] opf, input [31:0] regb, regc, output [31:0] rega);
 				regam = fdvidr_rega[22:0];
 			end
 			default: begin // unk opc
-				regas =1'bz;
+				regas = 1'bz;
 				regae = 8'bz;
 				regam = 23'bz;
 			end

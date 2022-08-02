@@ -9,7 +9,6 @@ module reciprocal (input [31:0] regb, output [31:0] rega);
 	wire [31:0] S1_2min_DN0_out;
 	wire [31:0] S2_DN1_out;
 	wire [31:0] S2_2minDN1_out;
-
 	wire [31:0] S0_N0_in;
 	
 	assign rega[31] = regb[31];
